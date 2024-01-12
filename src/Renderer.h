@@ -1,7 +1,6 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
-#include "Triangle.h"
 #include "Model.h"
 #include "TGAImage.h"
 #include "Matrix.h"

@@ -36,11 +36,6 @@
 },
 {
   "directory": "E:/Doc/ProjectFiles/CPP/MyRenderer/build",
-  "command": "E:\\Program\\MSYS64\\clang64\\bin\\clang++.exe -g -std=gnu++20 -o CMakeFiles\\MyRenderer.dir\\src\\Triangle.cpp.obj -c E:\\Doc\\ProjectFiles\\CPP\\MyRenderer\\src\\Triangle.cpp",
-  "file": "E:\\Doc\\ProjectFiles\\CPP\\MyRenderer\\src\\Triangle.cpp"
-},
-{
-  "directory": "E:/Doc/ProjectFiles/CPP/MyRenderer/build",
   "command": "E:\\Program\\MSYS64\\clang64\\bin\\clang++.exe -g -std=gnu++20 -o CMakeFiles\\MyRenderer.dir\\src\\main.cpp.obj -c E:\\Doc\\ProjectFiles\\CPP\\MyRenderer\\src\\main.cpp",
   "file": "E:\\Doc\\ProjectFiles\\CPP\\MyRenderer\\src\\main.cpp"
 }

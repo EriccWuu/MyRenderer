@@ -3,8 +3,25 @@
 
 #include "TGAImage.h"
 #include "Matrix.h"
-#include "Triangle.h"
 #include "Shader.h"
+
+struct Triangle {
+    public:
+    mat<3,4> vert = {};
+    mat<3,4> norm = {};
+
+    Triangle() = default;
+
+    Triangle(vec4 v[3]) {
+        for (int i = 3; i--; vert[i] = v[i]);
+    }
+
+    Triangle(mat<3,4> v) {
+        for (int i = 3; i--; vert[i] = v[i]);
+    }
+};
+
+
 
 // Basic color defination
 const TGAColor white = TGAColor({255, 255, 255, 255});
