@@ -12,7 +12,7 @@ vec4 Shader::vertex(const int iface, const int nthvert) {
     gl_vertex = MV * vec4(model->vert(iface, nthvert), 1.0);  // Now in view space
     varying_vert.setCol(nthvert, gl_vertex.xyz());
     // std::cout << PROJECTION * gl_vertex << '\n';
-    return gl_vertex; // Now in screen space
+    return gl_vertex;
 }
 
 // This code defines the fragment shader function for a rendering pipeline.
@@ -51,21 +51,29 @@ bool Shader::fragment(const vec3 bar, TGAColor &gl_Fragcolor) {
     vec4 currPixPos = (uniform_Mshadow * vec4(varying_vert*bar, 1.0));  // Now in light space
     currPixPos = currPixPos / currPixPos.w;
     float shadow;
-    float xx = currPixPos.x;
-    float yy = currPixPos.y;
+    int xx = currPixPos.x;
+    int yy = currPixPos.y;
     if (xx >= width || yy >= height || xx < 0 || yy < 0)
         shadow = 1;
     else {
-        int idx = int(xx) + int(yy*width);
-        shadow = 0.3 + 0.7*(currPixPos.z < (shadowmap[idx]));
-        TGAColor c(255, 255, 255);
-        if (currPixPos.z < (shadowmap[idx] - 0.01)) {
-            img.set(xx, height-yy, c * (1 - currPixPos.z));
-            gl_Fragcolor = vec3(255, 0, 0);
-            return false;
-        }
+        float bias = 0.02;
+        int idx = xx + yy*width;
+        shadow = (currPixPos.z < (shadowmap[idx] - bias)) ? 0 : 1;
+
+        /*******************************************************/
+        //                      Debug
+        /*******************************************************/
+        // int xbias = 32;
+        // int xcenter = 704;
+        // int ybias = 32;
+        // int ycenter = 512;
+        // if ((xx >= xcenter-xbias && xx < xcenter+xbias) && (yy >= ycenter-ybias  && yy < ycenter+ybias)) {
+        //     std::cout << currPixPos.z << ' ' << shadowmap[idx] << '\n';
+        //     debug_img.set(xx, height-yy, TGAColor(255, 255, 255) * (1 + currPixPos.z));
+        //     gl_Fragcolor = vec3(255, 0, 0);
+        //     return false;
+        // }
     }
-    shadow = 1;
 
     mat<3,3> v = varying_vert.transpose(); // For better indexing
     vec3 bn = (varying_norm*bar).normalize();
@@ -80,14 +88,14 @@ bool Shader::fragment(const vec3 bar, TGAColor &gl_Fragcolor) {
     vec3 n = (TBN * model->normal_tangent(uv)).normalize();
     vec3 l = -uniform_light;
     vec3 r = (n*(n*l*2.f) - l).normalize();
-    float ambi = 10; // Ambient term
+
+    TGAColor c = model->diffuse(uv);
+    float ambi = 0.2; // Ambient term
     float diff = std::max(n*l, 0.0);    // diffuse term
     float spec = 0.5*pow(std::max(r.z, 0.0), model->specular(uv));  // Specular term, r.z = cos(theta), theta is the angle between z axis and r.
     float intensity = diff + spec;
 
-    TGAColor c = model->diffuse(uv);
-    for (int i = 0; i < 3; i ++) gl_Fragcolor[i] = std::min<float>(ambi + c[i]*intensity*shadow, 255);
-    // gl_Fragcolor = std::min<TGAColor>(c*intensity*shadow, {255, 255, 255});
+    for (int i = 0; i < 3; i ++) gl_Fragcolor[i] = std::min<float>(c[i]*ambi + c[i]*intensity*shadow, 255);
 
     return false;
 }
@@ -100,12 +108,11 @@ vec4 DepthShader::vertex(const int iface, const int nthvert) {
     v = MV * vec4(model->vert(iface, nthvert), 1.0);  // Now in clip space
     gl_vertex = PROJECTION * v;
     varying_vert.setCol(nthvert, gl_vertex.xyz() / gl_vertex.w);
-    return v; // Now in screen space
+    return v; // Now in view space
 }
 
 bool DepthShader::fragment(const vec3 bar, TGAColor &gl_Fragcolor) {
-    double depth = 1 + (varying_vert * bar).z;
-    // std::cout << -10*std::log10(depth) << '\n';
-    gl_Fragcolor = TGAColor(255, 255, 255) * std::min(-10*std::log10(depth)/6, 1.0);
+    double depth = (varying_vert * bar).z;
+    gl_Fragcolor = TGAColor(255, 255, 255) * std::min(-10*std::log10(1 + depth)/6, 1.0);
     return false;
 }

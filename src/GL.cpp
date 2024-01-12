@@ -227,24 +227,23 @@ void drawTriangle(Triangle t, IShader &s, TGAImage &image, double *zbuffer) {
     Triangle tscreen(vscreen);
     std::vector<vec2> bbox = bounding_box(tscreen);
 
-    vec2 p;
-    for (p.x = bbox[0].x; p.x <= bbox[1].x; p.x ++) {
-        for (p.y = bbox[0].y; p.y <= bbox[1].y; p.y ++) {
-            if (p.x >= w || p.y >= h || p.x < 0 || p.y < 0) continue;
+    for (int x = bbox[0].x; x <= bbox[1].x; x ++) {
+        for (int y = bbox[0].y; y <= bbox[1].y; y ++) {
+            if (x >= w || y >= h || x < 0 || y < 0) continue;
 
-            auto [alpha, beta, gamma] = computeBarycentric(p.x, p.y, tscreen.vert);
-            if (alpha < 0 || beta < 0 || gamma < 0) continue;   // Determine if the point is inside triangle
+            auto [alpha, beta, gamma] = computeBarycentric(x, y, tscreen.vert);
+            if (alpha < 0 || beta < 0 || gamma < 0) continue;   // Determine if the pixel is inside triangle
 
-            double z = interpZ(p.x, p.y, vec3(alpha, beta, gamma), depth);
+            double z = interpZ(x, y, vec3(alpha, beta, gamma), depth);
             vec3 bc = {alpha*z/depth[0], beta*z/depth[1], gamma*z/depth[2]};
             double z_interp = vec3(tscreen.vert[0].z, tscreen.vert[1].z, tscreen.vert[2].z) * bc;
 
-            if (zbuffer[int(p.x + p.y*w)] > z_interp) continue; // Depth test
-            zbuffer[int(p.x + p.y*w)] = z_interp;  // Updata z-buffer
+            if (zbuffer[x + y*w] > z_interp) continue; // Depth test
+            zbuffer[x + y*w] = z_interp;  // Updata z-buffer
 
             TGAColor frag_color;
             if (s.fragment(bc, frag_color)) continue; // Fragment shader process
-            image.set(p.x, h - p.y, frag_color);
+            image.set(x, h - y, frag_color);
         }
     }
 }

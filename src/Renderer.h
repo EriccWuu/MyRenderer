@@ -25,6 +25,7 @@ public:
     Model* mod();
     double* zbuf();
     void draw(const Model *model, IShader &shader, TGAImage &image, bool DRAW_MESH=false);
+    void draw_zbuffer();
 };
 
 #endif

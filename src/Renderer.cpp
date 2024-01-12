@@ -25,7 +25,7 @@ void Renderer::initZbuffer() {
     int size = camera.screen_w * camera.screen_h;
     if (zbuffer == nullptr) zbuffer = new double[size];
     else { delete zbuffer; zbuffer = new double[size]; }
-    for (int i = camera.screen_w*camera.screen_h; i --; zbuffer[i] = -1.0);
+    for (int i = camera.screen_w*camera.screen_h; i --; zbuffer[i] = -1);
 }
 
 Camera& Renderer::cam() {
@@ -46,8 +46,6 @@ void Renderer::draw(const Model *model, IShader &shader, TGAImage &image, bool D
         return ;
     }
 
-    int width = camera.screen_w;
-    int height = camera.screen_h;
     for (int i = 0; i < model->nfaces(); i ++) {
         mat<3,4> v;
         for (int j = 0; j < 3; j ++) {
@@ -65,9 +63,15 @@ void Renderer::draw(const Model *model, IShader &shader, TGAImage &image, bool D
         else            drawTriangle(t, shader, image, zbuffer);
     }
 
-    // for (int i = 0; i < width; i ++)
-    //     for (int j = 0; j < height; j ++) {
-    //         BYTE x = -10*std::log10(zbuffer[i + j*width]) * 255;
-    //         zbuffer_img.set(i, j, TGAColor({x, x, x, TGAImage::GRAYSCALE}));
-    //     }
+}
+
+void Renderer::draw_zbuffer() {
+    int width = camera.screen_w;
+    int height = camera.screen_h;
+    for (int i = 0; i < width; i ++)
+        for (int j = 0; j < height; j ++) {
+            // std::cout << zbuffer[i + j*width] << '\n';
+            TGAColor c = TGAColor(255, 255, 255) * std::min(-10*std::log10(1 + zbuffer[i + j*width]) / 6, 1.0);
+            zbuffer_img.set(i, height-j, c);
+        }
 }

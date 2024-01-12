@@ -33,11 +33,11 @@ public:
 class Shader: public IShader {
 public:
     vec3 uniform_light;
-    double *shadowmap;
+    const double *shadowmap;
     mat4 uniform_Mshadow;
     int height, width;
 
-    TGAImage img = TGAImage(1024, 1024, TGAImage::RGB);
+    TGAImage debug_img = TGAImage(1024, 1024, TGAImage::RGB);
 
     vec4 vertex(const int iface, const int nthvert) override;
     bool fragment(const vec3 bar, TGAColor &gl_Fragcolor) override;

@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include <chrono>
 
-// This porgram use left-hand coordination
+// This porgram use right-hand coordinate
 
 const int width = 1024, height = 1024;
 const double fov = 45, aspectRatio = 1;
@@ -14,8 +14,8 @@ const double near = -0.5, far = -100;
 vec3 camPos = 1.2*vec3(1, 1, 3);
 vec3 up(0, 1, 0);
 vec3 center(0, 0, 0);
-vec3 lightPos = vec3(0, 2, -2);
-// vec3 lightPos = vec3(2, 2, 2);
+// vec3 lightPos = vec3(0, 2, -2);
+vec3 lightPos = vec3(2, 2, 2);
 vec3 lightdir = (center - lightPos).normalize();
 // vec3 camPos = lightPos;
 
@@ -70,16 +70,15 @@ void testShadowMap() {
     renderer.draw(floor, depthshader, shadowmap_img);
 
     double* shadowmap = renderer.zbuf();
-    // for (int i = 0; i < width * height; i ++) std::cout << shadowmap[i] << '\n';
 
     shadowmap_img.write_tga_file("output_shadowmap.tga");
-
 
     renderer.initZbuffer();
 
     /***************************************************************
     *         Second pass: render object with shadow map           *
     ***************************************************************/
+    renderer.setCamera(camPos, center-camPos, up, width, height, fov, aspectRatio, near, far);
     Shader shader;
     shader.MODEL = mat4::identity() * translate(vec3(0, 0, 0)) * scale(1);
     shader.VIEW = lookAt(renderer.cam().position.xyz(), renderer.cam().direction.xyz(), renderer.cam().up.xyz());
@@ -87,7 +86,7 @@ void testShadowMap() {
     shader.MV_IT = shader.MV.invertTranspose();
     shader.PROJECTION = projection(renderer.cam().fov, renderer.cam().aspectRatio, renderer.cam().near, renderer.cam().far);
     shader.VIEWPORT = viewport(renderer.cam().screen_w, renderer.cam().screen_h);
-    shader.uniform_Mshadow =  depthshader.VIEWPORT * depthshader.PROJECTION * depthshader.MV * (shader.MV).invert();
+    shader.uniform_Mshadow =  depthshader.VIEWPORT * depthshader.PROJECTION * depthshader.MV * (shader.MV.invert());
     shader.uniform_light = (shader.VIEW * vec4(lightdir)).xyz().normalize();
     shader.shadowmap = shadowmap;
     shader.width = width;
@@ -107,7 +106,7 @@ void testShadowMap() {
     /***************************************************************
     *                           Debug                              *
     ***************************************************************/
-    shader.img.write_tga_file("debug.tga");
+    shader.debug_img.write_tga_file("debug.tga");
 }
 
 int main(int argc, char** argv) {
