@@ -1,10 +1,10 @@
 # ninja log v5
+18	1078	7267727840689499	CMakeFiles/MyRenderer.dir/src/Camera.cpp.obj	4edfab634b9c2fd7
+24	1076	7267727840803964	CMakeFiles/MyRenderer.dir/src/Renderer.cpp.obj	76cbc180e9f2fa81
+958	1067	7267739713928261	MyRenderer.exe	161f82b36ac46b
+28	940	7267739712730359	CMakeFiles/MyRenderer.dir/src/Shader.cpp.obj	6d46aeb898a78d2b
 10	779	7267712483557085	CMakeFiles/MyRenderer.dir/src/Matrix.cpp.obj	9f9ec7ac15975058
-4	924	7267712484751847	CMakeFiles/MyRenderer.dir/src/Camera.cpp.obj	4edfab634b9c2fd7
-16	925	7267712485130572	CMakeFiles/MyRenderer.dir/src/Renderer.cpp.obj	76cbc180e9f2fa81
-20	951	7267712485394653	CMakeFiles/MyRenderer.dir/src/Shader.cpp.obj	6d46aeb898a78d2b
-7	983	7267712485484360	CMakeFiles/MyRenderer.dir/src/GL.cpp.obj	6d7fe8a7b6885724
+23	957	7267739712876362	CMakeFiles/MyRenderer.dir/src/GL.cpp.obj	6d7fe8a7b6885724
 23	983	7267712485594015	CMakeFiles/MyRenderer.dir/src/TGAImage.cpp.obj	309d765751aee57e
 12	1172	7267712487607531	CMakeFiles/MyRenderer.dir/src/Model.cpp.obj	73f6c8e1ecba6a4d
-26	1177	7267712487627464	CMakeFiles/MyRenderer.dir/src/main.cpp.obj	5a6477dcde28f3aa
-1177	1314	7267712488984244	MyRenderer.exe	161f82b36ac46b
+32	1318	7267727843235735	CMakeFiles/MyRenderer.dir/src/main.cpp.obj	5a6477dcde28f3aa

@@ -14,8 +14,6 @@ Camera::Camera() {
     width = height * aspectRatio;
     screen_w = 100;
     screen_h = 100;
-    frame = TGAImage(screen_w, screen_h, TGAImage::RGB);
-    zbuffer = TGAImage(screen_w, screen_h, TGAImage::RGB);
 }
 
 Camera::Camera(vec3 pos, vec3 dir, vec3 u, double w, double h, double fov, double r, double n, double f) {
@@ -32,8 +30,6 @@ Camera::Camera(vec3 pos, vec3 dir, vec3 u, double w, double h, double fov, doubl
     width = height * aspectRatio;
     screen_w = w;
     screen_h = h;
-    frame = TGAImage(screen_w, screen_h, TGAImage::RGB);
-    zbuffer = TGAImage(screen_w, screen_h, TGAImage::RGB);
 }
 
 void Camera::set(vec3 pos, vec3 dir, vec3 u, double w, double h, double fov, double r, double n, double f) {
@@ -49,8 +45,6 @@ void Camera::set(vec3 pos, vec3 dir, vec3 u, double w, double h, double fov, dou
     width = height * aspectRatio;
     screen_w = w;
     screen_h = h;
-    frame = TGAImage(screen_w, screen_h, TGAImage::RGB);
-    zbuffer = TGAImage(screen_w, screen_h, TGAImage::RGB);
 }
 
 mat4 Camera::lookAt() {
@@ -89,10 +83,7 @@ mat4 Camera::viewport() {
     mat4 m = mat4::identity();
     m[0][3] = screen_w / 2.f;
     m[1][3] = screen_h / 2.f;
-    // m[2][3] = depth / 2.f;
-
     m[0][0] = screen_w / 2.f;
     m[1][1] = screen_h / 2.f;
-    // m[2][2] = depth / 2.f;
     return m;
 }

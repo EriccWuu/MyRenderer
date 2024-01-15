@@ -23,15 +23,15 @@ void testShadowMap() {
     TGAImage shadowmap_img(width, height, TGAImage::RGB);
     TGAImage output_img(width, height, TGAImage::RGB);
 
-    Model African_head("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/african_head/african_head.obj");
-    Model African_head_eye_inner("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/african_head/african_head_eye_inner.obj");
-    std::vector<Model> african_head;
-    african_head.push_back(African_head);
-    african_head.push_back(African_head_eye_inner);
+    // Model African_head("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/african_head/african_head.obj");
+    // Model African_head_eye_inner("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/african_head/african_head_eye_inner.obj");
+    // std::vector<Model> african_head;
+    // african_head.push_back(African_head);
+    // african_head.push_back(African_head_eye_inner);
 
-    // Model Diablo3_pose("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/diablo3_pose/diablo3_pose.obj");
-    // std::vector<Model> diablo;
-    // diablo.push_back(Diablo3_pose);
+    Model Diablo3_pose("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/diablo3_pose/diablo3_pose.obj");
+    std::vector<Model> diablo;
+    diablo.push_back(Diablo3_pose);
 
     // Model boggie_body("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/boggie/body.obj");
     // Model boggie_eyes("E:/Doc/ProjectFiles/CPP/MyRenderer/obj/boggie/eyes.obj");
@@ -57,9 +57,9 @@ void testShadowMap() {
     depthshader.MV = depthshader.VIEW * depthshader.MODEL;
     depthshader.MV_IT = depthshader.MV.invertTranspose();
     depthshader.PROJECTION = projection(renderer.cam().fov, renderer.cam().aspectRatio, renderer.cam().near, renderer.cam().far);
-    depthshader.VIEWPORT = viewport(renderer.cam().screen_w, renderer.cam().screen_h);
+    depthshader.VIEWPORT = viewport(shadowmap_img.width(), shadowmap_img.height());
 
-    model2draw = african_head;
+    model2draw = diablo;
     for (auto model: model2draw) {
         const Model *m = &model;
         depthshader.setModel(m);
@@ -85,7 +85,7 @@ void testShadowMap() {
     shader.MV = shader.VIEW * shader.MODEL;
     shader.MV_IT = shader.MV.invertTranspose();
     shader.PROJECTION = projection(renderer.cam().fov, renderer.cam().aspectRatio, renderer.cam().near, renderer.cam().far);
-    shader.VIEWPORT = viewport(renderer.cam().screen_w, renderer.cam().screen_h);
+    shader.VIEWPORT = viewport(output_img.width(), output_img.height());
     shader.uniform_Mshadow =  depthshader.VIEWPORT * depthshader.PROJECTION * depthshader.MV * (shader.MV.invert());
     shader.uniform_light = (shader.VIEW * vec4(lightdir)).xyz().normalize();
     shader.shadowmap = shadowmap;

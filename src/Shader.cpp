@@ -15,11 +15,6 @@ vec4 Shader::vertex(const int iface, const int nthvert) {
     return gl_vertex;
 }
 
-// This code defines the fragment shader function for a rendering pipeline.
-// It performs various calculations for texture mapping, normal mapping, and bling-phong shading.
-// The final color of the fragment is determined by the diffuse component and the intensity of the light.
-// The code also includes tangent space calculations for normal mapping.
-// The resulting color is assigned to the output variable gl_Fragcolor.
 bool Shader::fragment(const vec3 bar, TGAColor &gl_Fragcolor) {
     vec2 uv = varying_uv*bar;
 
@@ -93,6 +88,7 @@ bool Shader::fragment(const vec3 bar, TGAColor &gl_Fragcolor) {
     float ambi = 0.2; // Ambient term
     float diff = std::max(n*l, 0.0);    // diffuse term
     float spec = 0.5*pow(std::max(r.z, 0.0), model->specular(uv));  // Specular term, r.z = cos(theta), theta is the angle between z axis and r.
+    if (model->specular(uv) < 1e-6) spec = 0;
     float intensity = diff + spec;
 
     for (int i = 0; i < 3; i ++) gl_Fragcolor[i] = std::min<float>(c[i]*ambi + c[i]*intensity*shadow, 255);

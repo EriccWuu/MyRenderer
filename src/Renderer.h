@@ -9,10 +9,10 @@
 #include "Shader.h"
 
 class Renderer {
+    double *zbuffer;
     Camera camera;
 
 public:
-    double *zbuffer;
     TGAImage frame_img;
     TGAImage zbuffer_img;
     Renderer();
